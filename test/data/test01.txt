@@ -1,0 +1,10 @@
+#
+# skinj2/test/data/test01.txt
+#   dc 25/05/0213
+#   dm 25/05/0213
+Herp Derp, Dperity Derp
+#-// Skinj Comment, this line will not be rendered
+More Derp
+#-jump end
+Some stuff that we care not about :)
+#-label end
