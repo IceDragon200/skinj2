@@ -7,6 +7,9 @@
 module Skinj2
   module Syntax
 
+    ### class_variables
+    @@syntax = {}
+
     ##
     # set_inst_entry(new_str)
     def set_inst_entry(new_str)
@@ -32,27 +35,41 @@ module Skinj2
     end
 
     ##
-    # tokenize(Array<String> list)
+    # tokenize(Array<String> list) -> Array<Hash[:line, :token]>
     #   tokenizes the array of strings
     def tokenize(list)
-      list.map do |str|
+      result = []
+      list.each_with_index do |str, i|
         newstr = str.dup
         if newstr.gsub(/\A\s+/, '').start_with?(@inst_entry)
-          token = nil
+          token = [:nil]
           syntax.each do |(symbol, regexp, tokenfix)|
             if mtchdata = str.match(regexp)
               token = [symbol, tokenfix.(mtchdata)]
               break
             end
           end
-          token
         else
-          [:data, newstr]
+          token = [:data, newstr]
         end
+        result << { line: i, raw: str, token: token }
       end
+      return result
+    end
+
+    ##
+    # register(String name)
+    def register(name)
+      @@syntax[name] = self
+    end
+
+    ##
+    # ::get_syntax(String name)
+    def self.get_syntax(name)
+      @@syntax[name]
     end
 
   end
 end
 
-require 'skinj2/syntax/default_syntax.rb'
+require 'skinj2/syntax/default_syntax'
