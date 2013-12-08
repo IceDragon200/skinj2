@@ -1,0 +1,2 @@
+#-// %_skj_file_% is a built-in variable in Skinj2
+Some data from another file: %_skj_file_%

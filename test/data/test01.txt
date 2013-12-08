@@ -8,3 +8,4 @@ More Derp
 #-jump end
 Some stuff that we care not about :)
 #-label end
+#-include "frag01.txt"

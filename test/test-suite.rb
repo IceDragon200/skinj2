@@ -15,13 +15,16 @@ class Skinj2Test < Test::Unit::TestCase
   end
 
   def test_interpreter
-    data = Skinj2.str_to_list(File.read('data/test01.txt'))
-    tokenlist = Skinj2::DefaultSyntax.tokenize(data)
     interpreter = Skinj2::DefaultInterpreter.new
-    #interpreter.vlog = STDOUT
-    interpreter.setup(tokenlist)
+    interpreter.vlog = STDERR
+    interpreter.setup_file('data/test01.txt')
+    interpreter.path << File.join(Dir.getwd, "data")
     interpreter.run
-    File.write("data/test01.txt.skj2", interpreter.render)
+    data = interpreter.render
+    puts "|#A#"
+    puts data
+    puts "|#Z#"
+    File.write("data/test01.txt.skj2", data)
   end
 
 end
