@@ -20,17 +20,21 @@ module Skinj2
 
     ##
     # // comment
-    lexi :comment, /\/\/(.*)/i
+    lexi :comment, /\/\/(?<comment>.*)/i
 
     ##
-    # define NAME or define NAME, VALUE
-    lexi :define,  /DEFINE\s+(?<name>\S+)(?:\s*,\s*(?<value>))?/i do |matchdata|
+    # define NAME or define NAME VALUE
+    lexi :define,  /DEFINE\s+(?<name>\S+)(?:\s+(?<value>.+))?/i do |matchdata|
       { name: matchdata[:name], value: (matchdata[:value] || true) }
     end
 
     ##
+    # echo string
+    lexi :echo,    /ECHO\s+(?<string>.*)/i
+
+    ##
     # eval ruby
-    lexi :eval,    /EVAL\s+(?<code>)/i
+    lexi :eval,    /EVAL\s+(?<code>.+)/i
 
     ##
     # halt
@@ -38,7 +42,7 @@ module Skinj2
 
     ##
     # include filename
-    lexi :include, /INCLUDE\s+(?<path>)/i
+    lexi :include, /INCLUDE\s+(?<filename>.+)/i
 
     ##
     # jump label
@@ -50,11 +54,26 @@ module Skinj2
 
     ##
     # log string
-    lexi :log,     /LOG\s+(?<string>)/i
+    lexi :log,     /LOG\s+(?<string>.+)/i
 
     ##
     # undef name
     lexi :undef,   /UNDEF\s+(?<name>\S+)/i
 
+    ##
+    # idepth
+    #   increment the current sandbox depth
+    lexi :idepth, /IDEPTH/i
+
+    ##
+    # ddepth
+    #   decrement the current sandbox depth
+    lexi :ddepth, /DDEPTH/i
+
+  end
+  module DefaultSyntaxCLike
+    extend Syntax
+    include DefaultSyntax
+    set_inst_entry '#'
   end
 end
