@@ -1,0 +1,41 @@
+#!/usr/bin/ruby
+# skinj2/bin/skinj2
+#   Skinj2 command line interface
+require "thor"   # for the command line stuff
+require "skinj2"
+
+class Skinj2CLI < Thor
+
+  desc "parse <filename> [-v] [-o output_filename]", "parses the file, and prints to STDOUT"
+  long_desc <<-LONGDESC
+    `skinj2 parse` will tokenize and pre-process the file to a target output.
+
+    default output: STDOUT
+  LONGDESC
+  option :verbose, type: :boolean, aliases: :v
+  #option :syntax, type: :string, aliases: :s
+  option :output, type: :string, aliases: :o
+  def parse(filename)
+    data = Skinj2.str_to_list(File.read(filename))
+    interpreter = Skinj2::DefaultInterpreter.new
+    interpreter.in_file = filename
+    interpreter.my_path << File.expand_path(File.dirname(filename), Dir.getwd)
+    interpreter.vlog = STDOUT if options[:verbose]
+    interpreter.setup_data(data)
+    interpreter.run
+    result = interpreter.render
+    if out_filename = options[:output]
+      File.write(out_filename, result)
+    else
+      STDOUT.write(result)
+    end
+  end
+
+  desc "version", "print the Skinj2 version information to STDERR"
+  def version
+    STDERR.puts("Skinj2 Version %s" % Skinj2::VERSION)
+  end
+
+end
+
+Skinj2CLI.start(ARGV)
