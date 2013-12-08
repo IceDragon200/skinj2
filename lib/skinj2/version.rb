@@ -5,6 +5,6 @@
 #   dm 24/05/2013
 module Skinj2
 
-  VERSION = "1.0.0".freeze
+  VERSION = "0.5.1".freeze
 
 end
